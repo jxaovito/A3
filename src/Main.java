@@ -6,7 +6,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 //        new Tela();
-
+        new Tela1(null);
         List<Integer> lista;
 
         lista = new ArrayList<>();
@@ -17,6 +17,7 @@ public class Main {
 
         print(lista);
 
+
         }
         private static void print(List<Integer> item){
         for(int i = 0; i < item.size(); i++){
@@ -26,7 +27,7 @@ public class Main {
             System.out.println("Veja como os atributos foram preenchidos\n\nNome: " + i.getNomePessoa());
             System.out.println("CPF: " + i.getCpfPessoa());
 
-            Tela1 primeiratela = new Tela1(null);
+
         }
 
 

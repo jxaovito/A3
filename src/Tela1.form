@@ -72,20 +72,22 @@
         </constraints>
         <properties/>
       </component>
-      <component id="f3afc" class="javax.swing.JTextField" binding="campoTelefone">
+      <component id="f3afc" class="javax.swing.JTextField" binding="campoCelular">
         <constraints>
           <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <text value=""/>
+        </properties>
       </component>
       <component id="1b823" class="javax.swing.JLabel">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Telefone:"/>
+          <text value="Celular:"/>
         </properties>
       </component>
       <component id="871f7" class="javax.swing.JButton" binding="botaoCadastrar">
