@@ -1,2 +1,5 @@
-package PACKAGE_NAME;public class Turma {
+public class Turma {
+    private String codTurma;
+
+
 }
