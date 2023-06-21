@@ -6,7 +6,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 //        new Tela();
-        new Tela1(null);
+        // new Tela1(null);
         List<Integer> lista;
 
         lista = new ArrayList<>();
@@ -27,10 +27,6 @@ public class Main {
             System.out.println("Veja como os atributos foram preenchidos\n\nNome: " + i.getNomePessoa());
             System.out.println("CPF: " + i.getCpfPessoa());
 
-
         }
-
-
-
 
     }
