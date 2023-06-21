@@ -17,6 +17,9 @@ public class CadastroAluno extends JFrame {
     JTextField campoEmail;
     JTextField campoEndereco;
     JTextField campoCelular;
+    private String banco = "escola";
+    private String porta = "3306";
+    private String IpHost = "//localhost";
 
     public void initialize() {
         // inicializando todos os campos e seus nomes
@@ -35,19 +38,19 @@ public class CadastroAluno extends JFrame {
         campoCpf = new JTextField();
         campoCpf.setFont(fontePadrao);
 
-         JLabel labelEmail = new JLabel("Email:");
+        JLabel labelEmail = new JLabel("Email:");
         labelEmail.setFont(fontePadrao);
 
         campoEmail = new JTextField();
         campoEmail.setFont(fontePadrao);
 
-         JLabel labelEndereco = new JLabel("Endereço:");
+        JLabel labelEndereco = new JLabel("Endereço:");
         labelEndereco.setFont(fontePadrao);
 
         campoEndereco = new JTextField();
         campoEndereco.setFont(fontePadrao);
 
-         JLabel labelCelular = new JLabel("Celular:");
+        JLabel labelCelular = new JLabel("Celular:");
         labelCelular.setFont(fontePadrao);
 
         campoCelular = new JTextField();
@@ -62,62 +65,69 @@ public class CadastroAluno extends JFrame {
         formPanel.add(campoNome);
         formPanel.add(labelCpf);
         formPanel.add(campoCpf);
-         formPanel.add(labelEmail);
+        formPanel.add(labelEmail);
         formPanel.add(campoEmail);
-         formPanel.add(labelEndereco);
+        formPanel.add(labelEndereco);
         formPanel.add(campoEndereco);
-         formPanel.add(labelCelular);
+        formPanel.add(labelCelular);
         formPanel.add(campoCelular);
 
-
-       // criação do botão cadastrar
+        // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
-       // ações dos botões da tela de cadastro de aluno
+        // ações dos botões da tela de cadastro de aluno
         botaoCadastrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 registrarAluno();
             }
-        // funcionamento da função registrarAluno: aqui os dados inseridos nos campos são associados às variáveis da classe aluno
-        private void registrarAluno() {
-        String nome = campoNome.getText();
-        String cpf = campoCpf.getText();
-        String endereco = campoEndereco.getText();
-        String email = campoEmail.getText();
-        String celular = campoCelular.getText();
 
-        // verifica se todos os campos estão preenchidos, caso não estejam ocorre um erro
-        if (nome.isEmpty() || cpf.isEmpty() || endereco.isEmpty() || email.isEmpty() || celular.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Preencha todos os campos e tente novamente", "Erro", JOptionPane.ERROR_MESSAGE);
-        } else {
-            // se estiverem preenchidos, aluno é adicionado ao banco de dados
-            aluno = adicionarAlunoNoBanco(nome, cpf, email, endereco, celular);
+            // funcionamento da função registrarAluno: aqui os dados inseridos nos campos
+            // são associados às variáveis da classe aluno
+            private void registrarAluno() {
+                String nome = campoNome.getText();
+                String cpf = campoCpf.getText();
+                String endereco = campoEndereco.getText();
+                String email = campoEmail.getText();
+                String celular = campoCelular.getText();
 
-            if (aluno != null) {
-                // se der tudo certo, a janela é fechada
-                dispose();
-            } else {
-                // se não, ocorre um erro na tela
-                JOptionPane.showMessageDialog(null, "Falha ao cadastrar aluno", "Erro", JOptionPane.ERROR_MESSAGE);
+                // verifica se todos os campos estão preenchidos, caso não estejam ocorre um
+                // erro
+                if (nome.isEmpty() || cpf.isEmpty() || endereco.isEmpty() || email.isEmpty() || celular.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Preencha todos os campos e tente novamente", "Erro",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // se estiverem preenchidos, aluno é adicionado ao banco de dados
+                    Boolean deuCerto = adicionarAlunoNoBanco(nome, cpf, email, endereco, celular);
+
+                    if (deuCerto) {
+                        // se der tudo certo, a janela é fechada
+                        JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
+                                JOptionPane.PLAIN_MESSAGE);
+                        dispose();
+                    } else {
+                        // se não, ocorre um erro na tela
+                        JOptionPane.showMessageDialog(null, "Falha ao cadastrar aluno", "Erro",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
-        }
-    }
 
         });
         // criando o botão cancelar
         JButton botaoCancelar = new JButton("Fechar");
         // funcionamento do botão "Cancelar" na interface
-         botaoCancelar.addActionListener(new ActionListener() {
+        botaoCancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fecharTela();
             }
+
             private void fecharTela() {
-        dispose();
-    }
+                dispose();
+            }
 
         });
-        
+
         // container dos botões
         JPanel botoesPanel = new JPanel();
         botoesPanel.setLayout(new GridLayout(1, 2, 10, 0));
@@ -140,12 +150,14 @@ public class CadastroAluno extends JFrame {
         pack();
     }
 
-    public Aluno aluno;
-    private Aluno adicionarAlunoNoBanco(String nome, String cpf, String email, String endereco, String celular) {
-        Aluno aluno = null;
+    // public Aluno aluno;
+
+    private boolean adicionarAlunoNoBanco(String nome, String cpf, String email, String endereco, String celular) {
+        // Aluno aluno = null;
         // Dados para conexão ao banco
-        final String DB_URL = "";
-        final String USERNAME = "";
+
+        final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
+        final String USERNAME = "root";
         final String PASSWORD = "";
 
         // Conexão do banco de dados
@@ -154,7 +166,8 @@ public class CadastroAluno extends JFrame {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO Alunos (nome, cpf, email, endereco, celular)" + "VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO aluno (nm_aluno, cpf_aluno, em_aluno, endereco_aluno, cel_aluno)"
+                    + "VALUES (?,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);
             preparedStatement.setString(2, cpf);
@@ -169,10 +182,11 @@ public class CadastroAluno extends JFrame {
             }
             stmt.close();
             conn.close();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return aluno;
     }
 
     public static void main(String[] args) {
