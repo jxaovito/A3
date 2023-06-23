@@ -2,13 +2,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import javax.swing.*;
 
-public class CadastroAluno extends JFrame {
+public class CadastroProfessor extends JFrame {
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
     // declaração das variaveis de texto
@@ -21,14 +17,14 @@ public class CadastroAluno extends JFrame {
     private String porta = "3306";
     private String IpHost = "//localhost";
 
-    public CadastroAluno(){
+    public CadastroProfessor(){
         this.initialize();
     }
 
     public void initialize() {
         // inicializando todos os campos e seus nomes
-        JLabel labelCadastroAluno = new JLabel("Cadastrar aluno", SwingConstants.CENTER);
-        labelCadastroAluno.setFont(fontePadrao);
+        JLabel labelCadastroProfessor = new JLabel("Cadastrar Professor", SwingConstants.CENTER);
+        labelCadastroProfessor.setFont(fontePadrao);
 
         JLabel labelNome = new JLabel("Nome:");
         labelNome.setFont(fontePadrao);
@@ -64,7 +60,7 @@ public class CadastroAluno extends JFrame {
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(0, 1, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
-        formPanel.add(labelCadastroAluno);
+        formPanel.add(labelCadastroProfessor);
         formPanel.add(labelNome);
         formPanel.add(campoNome);
         formPanel.add(labelCpf);
@@ -96,26 +92,8 @@ public class CadastroAluno extends JFrame {
 
                 // verifica se todos os campos estão preenchidos, caso não estejam ocorre um
                 // erro
-                String textoErro = "";
-                if(nome.isEmpty()){
-                    textoErro += "Preencha o campo nome \n\n";
-                }
-                if(cpf.length() != 11){
-                    textoErro += "Preencha o campo cpf corretamente \n";
-                    textoErro += "Campo cpf deve conter 11 caractestes \n\n";
-                }
-                if(endereco.isEmpty()){
-                    textoErro += "Preencha o campo endereco \n\n";
-                }
-                if(email.isEmpty()){
-                    textoErro += "Preencha o campo email \n\n";
-                }
-                if(celular.isEmpty()){
-                    textoErro += "Preencha o campo celular \n\n";
-                }
-
-                if (textoErro != "") {
-                    JOptionPane.showMessageDialog(null, textoErro, "Erro",
+                if (nome.isEmpty() || cpf.isEmpty() || endereco.isEmpty() || email.isEmpty() || celular.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Preencha todos os campos e tente novamente", "Erro",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
@@ -162,7 +140,7 @@ public class CadastroAluno extends JFrame {
         add(botoesPanel, BorderLayout.SOUTH);
 
         // configurações básicas para iniciar a tela no tamanho certo
-        setTitle("Cadastro de aluno");
+        setTitle("Cadastro de professor");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(400, 500);
         setMinimumSize(new Dimension(500, 450));
@@ -188,7 +166,7 @@ public class CadastroAluno extends JFrame {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO aluno (nm_aluno, cpf_aluno, em_aluno, endereco_aluno, cel_aluno)"
+            String sql = "INSERT INTO professor (nm_professor, cpf_professor, em_professor, endereco_professor, cel_professor)"
                     + "VALUES (?,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);

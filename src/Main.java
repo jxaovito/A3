@@ -6,7 +6,7 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 //        new Tela();
-        // new Tela1(null);
+        new Principal();
         List<Integer> lista;
 
         lista = new ArrayList<>();
