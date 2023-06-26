@@ -4,6 +4,7 @@ public class Curso {
     private String cargaHoraria;
     private String descricao;
 
+    // getters e setters da classe Curso
     public String getCodCurso() {
         return codCurso;
     }

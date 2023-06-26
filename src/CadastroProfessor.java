@@ -78,12 +78,12 @@ public class CadastroProfessor extends JFrame {
         botaoCadastrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                registrarAluno();
+                registrarProfessor();
             }
 
-            // funcionamento da função registrarAluno: aqui os dados inseridos nos campos
+            // funcionamento da função registrarProfessor: aqui os dados inseridos nos campos
             // são associados às variáveis da classe aluno
-            private void registrarAluno() {
+            private void registrarProfessor() {
                 String nome = campoNome.getText();
                 String cpf = campoCpf.getText();
                 String endereco = campoEndereco.getText();
@@ -97,16 +97,15 @@ public class CadastroProfessor extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarAlunoNoBanco(nome, cpf, email, endereco, celular);
+                    Boolean deuCerto = adicionarProfessorNoBanco(nome, cpf, email, endereco, celular);
 
                     if (deuCerto) {
-                        // se der tudo certo, a janela é fechada
+                        // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
                         JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
                                 JOptionPane.PLAIN_MESSAGE);
-                        dispose();
                     } else {
                         // se não, ocorre um erro na tela
-                        JOptionPane.showMessageDialog(null, "Falha ao cadastrar aluno", "Erro",
+                        JOptionPane.showMessageDialog(null, "Falha ao cadastrar professor", "Erro",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -150,10 +149,8 @@ public class CadastroProfessor extends JFrame {
         pack();
     }
 
-    // public Aluno aluno;
 
-    private boolean adicionarAlunoNoBanco(String nome, String cpf, String email, String endereco, String celular) {
-        // Aluno aluno = null;
+    private boolean adicionarProfessorNoBanco(String nome, String cpf, String email, String endereco, String celular) {
         // Dados para conexão ao banco
 
         final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;

@@ -122,10 +122,9 @@ public class CadastroAluno extends JFrame {
                     Boolean deuCerto = adicionarAlunoNoBanco(nome, cpf, email, endereco, celular);
 
                     if (deuCerto) {
-                        // se der tudo certo, a janela é fechada
+                        // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro professor
                         JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
                                 JOptionPane.PLAIN_MESSAGE);
-                        dispose();
                     } else {
                         // se não, ocorre um erro na tela
                         JOptionPane.showMessageDialog(null, "Falha ao cadastrar aluno", "Erro",

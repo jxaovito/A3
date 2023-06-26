@@ -5,6 +5,7 @@ public abstract class Pessoa {
     public String email_pessoa;
     public String celular_pessoa;
 
+    // Construtor da classe
     public Pessoa(String nome, String cpf, String endereco, String email, String celular) {
         setNomePessoa(nome);
         setCpfPessoa(cpf);

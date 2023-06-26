@@ -1,5 +1,5 @@
 
-    import java.awt.*;
+  import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -15,12 +15,6 @@ public class Principal extends JFrame {
 
     public void initialize() {
 
-        // container que contem os campos de texto e seus respectivos nomes
-        //JPanel formPanel = new JPanel();
-        //formPanel.setLayout(new GridLayout(0, 1, 10, 10));
-        //formPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
-        //formPanel.add(labelCadastroAluno);
-
         // criação do botão cadastrar
         JButton botaoCadastroAluno = new JButton("Cadastrar Aluno");
         // ações dos botões da tela de cadastro de aluno
@@ -33,9 +27,9 @@ public class Principal extends JFrame {
 
         });
         // criando o botão cancelar
-        JButton botaoCancelar = new JButton("Cadastrar Professor");
+        JButton botaoCadastroProfessor = new JButton("Cadastrar Professor");
         // funcionamento do botão "Cancelar" na interface
-        botaoCancelar.addActionListener(new ActionListener() {
+        botaoCadastroProfessor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
@@ -49,7 +43,7 @@ public class Principal extends JFrame {
         botoesPanel.setLayout(new GridLayout(0, 1, 10, 10));
         botoesPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         botoesPanel.add(botaoCadastroAluno);
-        botoesPanel.add(botaoCancelar);
+        botoesPanel.add(botaoCadastroProfessor);
 
         /*************** Inicia o frame ***************/
         //add(formPanel, BorderLayout.NORTH);
