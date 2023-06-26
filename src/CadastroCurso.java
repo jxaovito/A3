@@ -1,30 +1,29 @@
-import java.awt.*;
+    import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroProfessor extends JFrame {
+public class CadastroCurso extends JFrame{
+
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
     // declaração das variaveis de texto
     JTextField campoNome;
-    JTextField campoCpf;
-    JTextField campoEmail;
-    JTextField campoEndereco;
-    JTextField campoCelular;
+    JTextField campoCargaHoraria;
+    JTextField campoDescricao;
     private String banco = "escola";
     private String porta = "3306";
     private String IpHost = "//localhost";
 
-    public CadastroProfessor(){
+    public CadastroCurso(){
         this.initialize();
     }
 
     public void initialize() {
         // inicializando todos os campos e seus nomes
-        JLabel labelCadastroProfessor = new JLabel("Cadastrar Professor", SwingConstants.CENTER);
-        labelCadastroProfessor.setFont(fontePadrao);
+        JLabel labelCadastroCurso = new JLabel("Cadastrar Curso", SwingConstants.CENTER);
+        labelCadastroCurso.setFont(fontePadrao);
 
         JLabel labelNome = new JLabel("Nome:");
         labelNome.setFont(fontePadrao);
@@ -32,45 +31,32 @@ public class CadastroProfessor extends JFrame {
         campoNome = new JTextField();
         campoNome.setFont(fontePadrao);
 
-        JLabel labelCpf = new JLabel("CPF:");
-        labelCpf.setFont(fontePadrao);
+        JLabel labelCargaHoraria = new JLabel("CPF:");
+        labelCargaHoraria.setFont(fontePadrao);
 
-        campoCpf = new JTextField();
-        campoCpf.setFont(fontePadrao);
+        campoCargaHoraria = new JTextField();
+        campoCargaHoraria.setFont(fontePadrao);
 
-        JLabel labelEmail = new JLabel("Email:");
-        labelEmail.setFont(fontePadrao);
+        JLabel labelDescricao = new JLabel("Email:");
+        labelDescricao.setFont(fontePadrao);
 
-        campoEmail = new JTextField();
-        campoEmail.setFont(fontePadrao);
+        campoDescricao = new JTextField();
+        campoDescricao.setFont(fontePadrao);
 
-        JLabel labelEndereco = new JLabel("Endereço:");
-        labelEndereco.setFont(fontePadrao);
-
-        campoEndereco = new JTextField();
-        campoEndereco.setFont(fontePadrao);
-
-        JLabel labelCelular = new JLabel("Celular:");
-        labelCelular.setFont(fontePadrao);
-
-        campoCelular = new JTextField();
-        campoCelular.setFont(fontePadrao);
+  
 
         // container que contem os campos de texto e seus respectivos nomes
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(0, 1, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
-        formPanel.add(labelCadastroProfessor);
+        formPanel.add(labelCadastroCurso);
         formPanel.add(labelNome);
         formPanel.add(campoNome);
-        formPanel.add(labelCpf);
-        formPanel.add(campoCpf);
-        formPanel.add(labelEmail);
-        formPanel.add(campoEmail);
-        formPanel.add(labelEndereco);
-        formPanel.add(campoEndereco);
-        formPanel.add(labelCelular);
-        formPanel.add(campoCelular);
+        formPanel.add(labelCargaHoraria);
+        formPanel.add(campoCargaHoraria);
+        formPanel.add(labelDescricao);
+        formPanel.add(campoDescricao);
+ 
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
@@ -78,37 +64,27 @@ public class CadastroProfessor extends JFrame {
         botaoCadastrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                registrarProfessor();
+                registrarCurso();
             }
 
-            // funcionamento da função registrarProfessor: aqui os dados inseridos nos campos
+            // funcionamento da função registrarCurso: aqui os dados inseridos nos campos
             // são associados às variáveis da classe aluno
-            private void registrarProfessor() {
+            private void registrarCurso() {
                 String nome = campoNome.getText();
-                String cpf = campoCpf.getText();
-                String endereco = campoEndereco.getText();
-                String email = campoEmail.getText();
-                String celular = campoCelular.getText();
+                int cargaHoraria = Integer.parseInt(campoCargaHoraria.getText());;
+                String descricao = campoDescricao.getText();
+
 
                 // verifica se todos os campos estão preenchidos, um aviso é mostrado na tela
-                 // verifica se todos os campos estão preenchidos, caso não estejam ocorre um
-                // erro
-                String textoErro = "";
+                 String textoErro = "";
                 if(nome.isEmpty()){
                     textoErro += "Preencha o campo nome \n\n";
                 }
-                if(cpf.length() != 11){
-                    textoErro += "Preencha o campo cpf corretamente \n";
-                    textoErro += "Campo cpf deve conter 11 caractestes \n\n";
+                if(cargaHoraria == null || cargaHoraria == 0){
+                    textoErro += "Preencha o campo carga horária \n";
                 }
-                if(endereco.isEmpty()){
-                    textoErro += "Preencha o campo endereco \n\n";
-                }
-                if(email.isEmpty()){
-                    textoErro += "Preencha o campo email \n\n";
-                }
-                if(celular.isEmpty()){
-                    textoErro += "Preencha o campo celular \n\n";
+                if(descricao.isEmpty()){
+                    textoErro += "Preencha o campo descrição \n\n";
                 }
 
                 if (textoErro != "") {
@@ -116,7 +92,7 @@ public class CadastroProfessor extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarProfessorNoBanco(nome, cpf, email, endereco, celular);
+                    Boolean deuCerto = adicionarCursoNoBanco(nome, cargaHoraria, descricao);
 
                     if (deuCerto) {
                         // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
@@ -124,7 +100,7 @@ public class CadastroProfessor extends JFrame {
                                 JOptionPane.PLAIN_MESSAGE);
                     } else {
                         // se não, ocorre um erro na tela
-                        JOptionPane.showMessageDialog(null, "Falha ao cadastrar professor", "Erro",
+                        JOptionPane.showMessageDialog(null, "Falha ao cadastrar Curso", "Erro",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -158,7 +134,7 @@ public class CadastroProfessor extends JFrame {
         add(botoesPanel, BorderLayout.SOUTH);
 
         // configurações básicas para iniciar a tela no tamanho certo
-        setTitle("Cadastro de professor");
+        setTitle("Cadastro de Curso");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(400, 500);
         setMinimumSize(new Dimension(500, 450));
@@ -169,7 +145,7 @@ public class CadastroProfessor extends JFrame {
     }
 
 
-    private boolean adicionarProfessorNoBanco(String nome, String cpf, String email, String endereco, String celular) {
+    private boolean adicionarCursoNoBanco(String nome, int cargaHoraria, String descricao) {
         // Dados para conexão ao banco
 
         final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
@@ -182,17 +158,17 @@ public class CadastroProfessor extends JFrame {
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO professor (nm_professor, cpf_professor, em_professor, endereco_professor, cel_professor)"
+            String sql = "INSERT INTO Curso (nm_curso, carga_horaria, ds_curso)"
                     + "VALUES (?,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);
-            preparedStatement.setString(2, cpf);
-            preparedStatement.setString(3, email);
-            preparedStatement.setString(4, endereco);
-            preparedStatement.setString(5, celular);
+            preparedStatement.setInt(2, cargaHoraria);
+            preparedStatement.setString(3, descricao);
+
 
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
+                // mudar linha: falta matricula
                 // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
             }
             stmt.close();
@@ -204,3 +180,5 @@ public class CadastroProfessor extends JFrame {
         }
     }
 }
+
+

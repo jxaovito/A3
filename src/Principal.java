@@ -15,9 +15,8 @@ public class Principal extends JFrame {
 
     public void initialize() {
 
-        // criação do botão cadastrar
+        // Criação e aplicação dos botões de entrada em cada tela de cadastro
         JButton botaoCadastroAluno = new JButton("Cadastrar Aluno");
-        // ações dos botões da tela de cadastro de aluno
         botaoCadastroAluno.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -26,14 +25,53 @@ public class Principal extends JFrame {
             }
 
         });
-        // criando o botão cancelar
         JButton botaoCadastroProfessor = new JButton("Cadastrar Professor");
-        // funcionamento do botão "Cancelar" na interface
         botaoCadastroProfessor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 new CadastroProfessor();
+            }
+
+        });
+          JButton botaoCadastroCurso = new JButton("Cadastrar Curso");
+        botaoCadastroCurso.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new CadastroCurso();
+            }
+
+        });
+         JButton botaoCadastroTurma = new JButton("Cadastrar Turma");
+        botaoCadastroTurma.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new CadastroTurma();
+            }
+
+        });
+         JButton botaoCadastroSala = new JButton("Cadastrar Sala");
+        botaoCadastroSala.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new CadastroSala();
+            }
+
+        });
+
+         // criação e funcionamento do botão de fechar
+        JButton botaoCancelar = new JButton("Fechar");
+        botaoCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fecharTela();
+            }
+
+            private void fecharTela() {
+                dispose();
             }
 
         });
@@ -44,6 +82,10 @@ public class Principal extends JFrame {
         botoesPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         botoesPanel.add(botaoCadastroAluno);
         botoesPanel.add(botaoCadastroProfessor);
+        botoesPanel.add(botaoCadastroCurso);
+        botoesPanel.add(botaoCadastroTurma);
+        botoesPanel.add(botaoCadastroSala);
+        botoesPanel.add(botaoCancelar);
 
         /*************** Inicia o frame ***************/
         //add(formPanel, BorderLayout.NORTH);
