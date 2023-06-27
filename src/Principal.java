@@ -6,7 +6,6 @@ import javax.swing.*;
 
 public class Principal extends JFrame {
     // fonte padrão do programa
-    final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
     // declaração das variaveis de texto
 
     public Principal(){

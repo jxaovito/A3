@@ -2,10 +2,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import javax.swing.*;
 
 public class CadastroAluno extends JFrame {
@@ -149,12 +145,22 @@ public class CadastroAluno extends JFrame {
 
         });
 
+        JButton botaoVoltar = new JButton("Voltar");
+        botaoVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Principal();
+            }
+
+        });
         // container dos botões
         JPanel botoesPanel = new JPanel();
         botoesPanel.setLayout(new GridLayout(1, 2, 10, 0));
         botoesPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         botoesPanel.add(botaoCadastrar);
         botoesPanel.add(botaoCancelar);
+        botoesPanel.add(botaoVoltar);
 
         /*************** Inicia o frame ***************/
         add(formPanel, BorderLayout.NORTH);

@@ -120,16 +120,28 @@ public class CadastroSala extends JFrame{
 
         });
 
+            JButton botaoVoltar = new JButton("Voltar");
+        botaoVoltar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Principal();
+            }
+
+        });
+
         // container dos botões
         JPanel botoesPanel = new JPanel();
         botoesPanel.setLayout(new GridLayout(1, 2, 10, 0));
         botoesPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         botoesPanel.add(botaoCadastrar);
         botoesPanel.add(botaoCancelar);
+        botoesPanel.add(botaoVoltar);
 
         /*************** Inicia o frame ***************/
         add(formPanel, BorderLayout.NORTH);
         add(botoesPanel, BorderLayout.SOUTH);
+
 
         // configurações básicas para iniciar a tela no tamanho certo
         setTitle("Cadastro de Sala");
