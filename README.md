@@ -2,10 +2,6 @@
 
 <p align="center">Um sistema de gerenciamento em java e mysql dos cursos de uma empresa que trabalha em diversas áreas</p>
 
-<h4 align="center"> 
-	🎉  A3 Concluída  🚀
-</h4>
-
 ### Features
 
 - [x] Cadastro de Aluno
