@@ -19,6 +19,8 @@
 Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
 [JDK](https://www.oracle.com/br/java/technologies/downloads/), [xampp](https://www.apachefriends.org/pt_br/download.html). 
 
+Obs: No Visual Studio Code, será necessário baixar também a extensão "Extension Pack For Java"
+
 ### 🎲 Rodando o Back End (servidor)
 
 ```bash
@@ -31,7 +33,8 @@ $ cd A3
 # Ligue a opção MySQL no xampp
 $ MySQL --> Start
 
-# Execute o código no arquivo "Main.java"
+# Usando o Visual Studio Code: Execute o código no arquivo "Main.java"
+# Usando o Eclipse: Execute o código no arquivo "Main.java" usando a opção "Run as Java application"
 ```
 
 ### 🛠 Tecnologias
