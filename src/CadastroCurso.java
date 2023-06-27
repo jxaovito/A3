@@ -31,13 +31,13 @@ public class CadastroCurso extends JFrame{
         campoNome = new JTextField();
         campoNome.setFont(fontePadrao);
 
-        JLabel labelCargaHoraria = new JLabel("CPF:");
+        JLabel labelCargaHoraria = new JLabel("Carga Horária:");
         labelCargaHoraria.setFont(fontePadrao);
 
         campoCargaHoraria = new JTextField();
         campoCargaHoraria.setFont(fontePadrao);
 
-        JLabel labelDescricao = new JLabel("Email:");
+        JLabel labelDescricao = new JLabel("Descrição:");
         labelDescricao.setFont(fontePadrao);
 
         campoDescricao = new JTextField();
@@ -71,7 +71,7 @@ public class CadastroCurso extends JFrame{
             // são associados às variáveis da classe aluno
             private void registrarCurso() {
                 String nome = campoNome.getText();
-                int cargaHoraria = Integer.parseInt(campoCargaHoraria.getText());;
+                int cargaHoraria = Integer.parseInt(campoCargaHoraria.getText());
                 String descricao = campoDescricao.getText();
 
 
@@ -80,7 +80,7 @@ public class CadastroCurso extends JFrame{
                 if(nome.isEmpty()){
                     textoErro += "Preencha o campo nome \n\n";
                 }
-                if(cargaHoraria == null || cargaHoraria == 0){
+                if(cargaHoraria == 0){
                     textoErro += "Preencha o campo carga horária \n";
                 }
                 if(descricao.isEmpty()){
@@ -159,7 +159,7 @@ public class CadastroCurso extends JFrame{
 
             Statement stmt = conn.createStatement();
             String sql = "INSERT INTO Curso (nm_curso, carga_horaria, ds_curso)"
-                    + "VALUES (?,?,?,?,?)";
+                    + "VALUES (?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);
             preparedStatement.setInt(2, cargaHoraria);

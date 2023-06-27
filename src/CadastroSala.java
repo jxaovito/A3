@@ -10,10 +10,8 @@ public class CadastroSala extends JFrame{
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
     // declaração das variaveis de texto
     JTextField campoNome;
-    JTextField campoCpf;
-    JTextField campoEmail;
-    JTextField campoEndereco;
-    JTextField campoCelular;
+    JTextField campoLocal;
+    JTextField campoCapacidade;
     private String banco = "escola";
     private String porta = "3306";
     private String IpHost = "//localhost";
@@ -33,29 +31,18 @@ public class CadastroSala extends JFrame{
         campoNome = new JTextField();
         campoNome.setFont(fontePadrao);
 
-        JLabel labelCpf = new JLabel("CPF:");
-        labelCpf.setFont(fontePadrao);
+        JLabel labelLocal = new JLabel("Local:");
+        labelLocal.setFont(fontePadrao);
 
-        campoCpf = new JTextField();
-        campoCpf.setFont(fontePadrao);
+        campoLocal = new JTextField();
+        campoLocal.setFont(fontePadrao);
 
-        JLabel labelEmail = new JLabel("Email:");
-        labelEmail.setFont(fontePadrao);
+        JLabel labelCapacidade = new JLabel("Capacidade total:");
+        labelCapacidade.setFont(fontePadrao);
 
-        campoEmail = new JTextField();
-        campoEmail.setFont(fontePadrao);
+        campoCapacidade = new JTextField();
+        campoCapacidade.setFont(fontePadrao);
 
-        JLabel labelEndereco = new JLabel("Endereço:");
-        labelEndereco.setFont(fontePadrao);
-
-        campoEndereco = new JTextField();
-        campoEndereco.setFont(fontePadrao);
-
-        JLabel labelCelular = new JLabel("Celular:");
-        labelCelular.setFont(fontePadrao);
-
-        campoCelular = new JTextField();
-        campoCelular.setFont(fontePadrao);
 
         // container que contem os campos de texto e seus respectivos nomes
         JPanel formPanel = new JPanel();
@@ -64,14 +51,11 @@ public class CadastroSala extends JFrame{
         formPanel.add(labelCadastroSala);
         formPanel.add(labelNome);
         formPanel.add(campoNome);
-        formPanel.add(labelCpf);
-        formPanel.add(campoCpf);
-        formPanel.add(labelEmail);
-        formPanel.add(campoEmail);
-        formPanel.add(labelEndereco);
-        formPanel.add(campoEndereco);
-        formPanel.add(labelCelular);
-        formPanel.add(campoCelular);
+        formPanel.add(labelLocal);
+        formPanel.add(campoLocal);
+        formPanel.add(labelCapacidade);
+        formPanel.add(campoCapacidade);
+
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
@@ -86,26 +70,19 @@ public class CadastroSala extends JFrame{
             // são associados às variáveis da classe aluno
             private void registrarSala() {
                 String nome = campoNome.getText();
-                String cargaHoraria = campoCpf.getText();
-                String endereco = campoEndereco.getText();
-
+                String local = campoLocal.getText();
+                int capacidade = Integer.parseInt(campoCapacidade.getText());
 
                 // verifica se todos os campos estão preenchidos, um aviso é mostrado na tela
                  String textoErro = "";
                 if(nome.isEmpty()){
                     textoErro += "Preencha o campo nome \n\n";
                 }
-                if(cargaHoraria.isEmpty()){
-                    textoErro += "Preencha o campo carga horária \n";
+                if(local.isEmpty()){
+                    textoErro += "Preencha o campo local \n";
                 }
-                if(endereco.isEmpty()){
-                    textoErro += "Preencha o campo endereco \n\n";
-                }
-                if(email.isEmpty()){
-                    textoErro += "Preencha o campo email \n\n";
-                }
-                if(celular.isEmpty()){
-                    textoErro += "Preencha o campo celular \n\n";
+                if(capacidade == 0){
+                    textoErro += "Preencha o campo capacidade total \n\n";
                 }
 
                 if (textoErro != "") {
@@ -113,7 +90,7 @@ public class CadastroSala extends JFrame{
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarSalaNoBanco(nome, cpf, email, endereco, celular);
+                    Boolean deuCerto = adicionarSalaNoBanco(nome, local, capacidade);
 
                     if (deuCerto) {
                         // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
@@ -166,7 +143,7 @@ public class CadastroSala extends JFrame{
     }
 
 
-    private boolean adicionarSalaNoBanco(String nome, String cpf, String email, String endereco, String celular) {
+    private boolean adicionarSalaNoBanco(String nome, String local, Integer capacidade) {
         // Dados para conexão ao banco
 
         final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
@@ -179,18 +156,16 @@ public class CadastroSala extends JFrame{
             Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
             Statement stmt = conn.createStatement();
-            String sql = "INSERT INTO Sala (nm_Sala, carga_horaria, ds_Sala)"
-                    + "VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO Sala (nm_sala, local_sala, capacidade_total)"
+                    + "VALUES (?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);
-            preparedStatement.setString(2, cpf);
-            preparedStatement.setString(3, email);
-            preparedStatement.setString(4, endereco);
-            preparedStatement.setString(5, celular);
+            preparedStatement.setString(2, local);
+            preparedStatement.setInt(3, capacidade);
+
 
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
-                // mudar linha: falta matricula
                 // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
             }
             stmt.close();
@@ -203,4 +178,4 @@ public class CadastroSala extends JFrame{
     }
 }
 
-}
+
