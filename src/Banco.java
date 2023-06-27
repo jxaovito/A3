@@ -11,7 +11,7 @@ public class Banco {
     private String porta = "3306";
     private String IpHost = "//localhost";
 
-    public Connection ConectarBanco() {
+    public boolean ConectarBanco() {
 
         final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
         final String USERNAME = "root";
@@ -20,20 +20,30 @@ public class Banco {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            this.stmt = conn.createStatement();
 
             // this.stmt = conn.createStatement();
-            return this.conn;
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return false;
         }
     }
 
     public void desconectar() {
         try {
             this.conn.close();
+            this.stmt.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao fechar");
         }
+    }
+
+    public Connection getConn() {
+        return conn;
+    }
+
+    public Statement getStmt() {
+        return stmt;
     }
 }

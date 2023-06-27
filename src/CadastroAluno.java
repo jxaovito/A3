@@ -13,11 +13,10 @@ public class CadastroAluno extends JFrame {
     JTextField campoEmail;
     JTextField campoEndereco;
     JTextField campoCelular;
-    private String banco = "escola";
-    private String porta = "3306";
-    private String IpHost = "//localhost";
+    Connection conn = null;
+    Statement stmt = null;
 
-    public CadastroAluno(){
+    public CadastroAluno() {
         this.initialize();
     }
 
@@ -93,20 +92,20 @@ public class CadastroAluno extends JFrame {
                 // verifica se todos os campos estão preenchidos, caso não estejam ocorre um
                 // erro
                 String textoErro = "";
-                if(nome.isEmpty()){
+                if (nome.isEmpty()) {
                     textoErro += "Preencha o campo nome \n\n";
                 }
-                if(cpf.length() != 11){
+                if (cpf.length() != 11) {
                     textoErro += "Preencha o campo cpf corretamente \n";
                     textoErro += "Campo cpf deve conter 11 caractestes \n\n";
                 }
-                if(endereco.isEmpty()){
+                if (endereco.isEmpty()) {
                     textoErro += "Preencha o campo endereco \n\n";
                 }
-                if(email.isEmpty()){
+                if (email.isEmpty()) {
                     textoErro += "Preencha o campo email \n\n";
                 }
-                if(celular.isEmpty()){
+                if (celular.isEmpty()) {
                     textoErro += "Preencha o campo celular \n\n";
                 }
 
@@ -180,19 +179,15 @@ public class CadastroAluno extends JFrame {
     // public Aluno aluno;
 
     private boolean adicionarAlunoNoBanco(String nome, String cpf, String email, String endereco, String celular) {
-        // Aluno aluno = null;
-        // Dados para conexão ao banco
 
-        final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
-        final String USERNAME = "root";
-        final String PASSWORD = "";
-
-        // Conexão do banco de dados
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            Banco banco = new Banco();
 
-            Statement stmt = conn.createStatement();
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
+
             String sql = "INSERT INTO aluno (nm_aluno, cpf_aluno, em_aluno, endereco_aluno, cel_aluno)"
                     + "VALUES (?,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -209,6 +204,7 @@ public class CadastroAluno extends JFrame {
             }
             stmt.close();
             conn.close();
+            banco.desconectar();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
