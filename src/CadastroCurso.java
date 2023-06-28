@@ -1,10 +1,10 @@
-    import java.awt.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroCurso extends JFrame{
+public class CadastroCurso extends JFrame {
 
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
@@ -12,11 +12,10 @@ public class CadastroCurso extends JFrame{
     JTextField campoNome;
     JTextField campoCargaHoraria;
     JTextField campoDescricao;
-    private String banco = "escola";
-    private String porta = "3306";
-    private String IpHost = "//localhost";
+    Connection conn = null;
+    Statement stmt = null;
 
-    public CadastroCurso(){
+    public CadastroCurso() {
         this.initialize();
     }
 
@@ -43,8 +42,6 @@ public class CadastroCurso extends JFrame{
         campoDescricao = new JTextField();
         campoDescricao.setFont(fontePadrao);
 
-  
-
         // container que contem os campos de texto e seus respectivos nomes
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(0, 1, 10, 10));
@@ -56,7 +53,6 @@ public class CadastroCurso extends JFrame{
         formPanel.add(campoCargaHoraria);
         formPanel.add(labelDescricao);
         formPanel.add(campoDescricao);
- 
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
@@ -74,16 +70,15 @@ public class CadastroCurso extends JFrame{
                 int cargaHoraria = Integer.parseInt(campoCargaHoraria.getText());
                 String descricao = campoDescricao.getText();
 
-
                 // verifica se todos os campos estão preenchidos, um aviso é mostrado na tela
-                 String textoErro = "";
-                if(nome.isEmpty()){
+                String textoErro = "";
+                if (nome.isEmpty()) {
                     textoErro += "Preencha o campo nome \n\n";
                 }
-                if(cargaHoraria == 0){
+                if (cargaHoraria == 0) {
                     textoErro += "Preencha o campo carga horária \n";
                 }
-                if(descricao.isEmpty()){
+                if (descricao.isEmpty()) {
                     textoErro += "Preencha o campo descrição \n\n";
                 }
 
@@ -122,7 +117,7 @@ public class CadastroCurso extends JFrame{
 
         });
 
-            JButton botaoVoltar = new JButton("Voltar");
+        JButton botaoVoltar = new JButton("Voltar");
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -139,7 +134,7 @@ public class CadastroCurso extends JFrame{
         botoesPanel.add(botaoCadastrar);
         botoesPanel.add(botaoCancelar);
         botoesPanel.add(botaoVoltar);
-        
+
         /*************** Inicia o frame ***************/
         add(formPanel, BorderLayout.NORTH);
         add(botoesPanel, BorderLayout.SOUTH);
@@ -155,27 +150,21 @@ public class CadastroCurso extends JFrame{
         pack();
     }
 
-
     private boolean adicionarCursoNoBanco(String nome, int cargaHoraria, String descricao) {
-        // Dados para conexão ao banco
 
-        final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
-        final String USERNAME = "root";
-        final String PASSWORD = "";
-
-        // Conexão do banco de dados
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            Banco banco = new Banco();
 
-            Statement stmt = conn.createStatement();
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
             String sql = "INSERT INTO Curso (nm_curso, carga_horaria, ds_curso)"
                     + "VALUES (?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);
             preparedStatement.setInt(2, cargaHoraria);
             preparedStatement.setString(3, descricao);
-
 
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
@@ -184,6 +173,7 @@ public class CadastroCurso extends JFrame{
             }
             stmt.close();
             conn.close();
+            banco.desconectar();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -191,5 +181,3 @@ public class CadastroCurso extends JFrame{
         }
     }
 }
-
-

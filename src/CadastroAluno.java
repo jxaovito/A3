@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.Arrays;
+
 import javax.swing.*;
 
 public class CadastroAluno extends JFrame {
@@ -182,6 +184,7 @@ public class CadastroAluno extends JFrame {
 
         try {
             Banco banco = new Banco();
+            int qntd = 0;
 
             if (banco.ConectarBanco()) {
                 conn = banco.getConn();
@@ -198,6 +201,32 @@ public class CadastroAluno extends JFrame {
             preparedStatement.setString(5, celular);
 
             int camposAdicionados = preparedStatement.executeUpdate();
+
+            sql = "SELECT count(cd_curso) as quantidade from curso";
+            preparedStatement = conn.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                qntd = resultSet.getInt("quantidade");
+            }
+            System.out.println(qntd);
+
+            Object[][] a = new Object[qntd][qntd];
+
+            sql = "SELECT cd_curso, nm_curso from curso";
+            preparedStatement = conn.prepareStatement(sql);
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int cd_curso = resultSet.getInt("cd_curso");
+                String nm_curso = resultSet.getString("nm_curso");
+                for (int i = 0; i < qntd; i++) {
+                    a[i] = new Object[] { cd_curso, nm_curso };
+                    continue;
+                }
+            }
+
+            System.out.println(Arrays.deepToString(a));
             if (camposAdicionados > 0) {
                 // mudar linha: falta matricula
                 // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);

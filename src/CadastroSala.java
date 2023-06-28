@@ -1,10 +1,10 @@
-    import java.awt.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroSala extends JFrame{
+public class CadastroSala extends JFrame {
 
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
@@ -12,11 +12,10 @@ public class CadastroSala extends JFrame{
     JTextField campoNome;
     JTextField campoLocal;
     JTextField campoCapacidade;
-    private String banco = "escola";
-    private String porta = "3306";
-    private String IpHost = "//localhost";
+    Connection conn = null;
+    Statement stmt = null;
 
-    public CadastroSala(){
+    public CadastroSala() {
         this.initialize();
     }
 
@@ -43,7 +42,6 @@ public class CadastroSala extends JFrame{
         campoCapacidade = new JTextField();
         campoCapacidade.setFont(fontePadrao);
 
-
         // container que contem os campos de texto e seus respectivos nomes
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(0, 1, 10, 10));
@@ -55,7 +53,6 @@ public class CadastroSala extends JFrame{
         formPanel.add(campoLocal);
         formPanel.add(labelCapacidade);
         formPanel.add(campoCapacidade);
-
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
@@ -74,14 +71,14 @@ public class CadastroSala extends JFrame{
                 int capacidade = Integer.parseInt(campoCapacidade.getText());
 
                 // verifica se todos os campos estão preenchidos, um aviso é mostrado na tela
-                 String textoErro = "";
-                if(nome.isEmpty()){
+                String textoErro = "";
+                if (nome.isEmpty()) {
                     textoErro += "Preencha o campo nome \n\n";
                 }
-                if(local.isEmpty()){
+                if (local.isEmpty()) {
                     textoErro += "Preencha o campo local \n";
                 }
-                if(capacidade == 0){
+                if (capacidade == 0) {
                     textoErro += "Preencha o campo capacidade total \n\n";
                 }
 
@@ -120,7 +117,7 @@ public class CadastroSala extends JFrame{
 
         });
 
-            JButton botaoVoltar = new JButton("Voltar");
+        JButton botaoVoltar = new JButton("Voltar");
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,7 +139,6 @@ public class CadastroSala extends JFrame{
         add(formPanel, BorderLayout.NORTH);
         add(botoesPanel, BorderLayout.SOUTH);
 
-
         // configurações básicas para iniciar a tela no tamanho certo
         setTitle("Cadastro de Sala");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -154,20 +150,14 @@ public class CadastroSala extends JFrame{
         pack();
     }
 
-
     private boolean adicionarSalaNoBanco(String nome, String local, Integer capacidade) {
-        // Dados para conexão ao banco
-
-        final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
-        final String USERNAME = "root";
-        final String PASSWORD = "";
-
-        // Conexão do banco de dados
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            Banco banco = new Banco();
 
-            Statement stmt = conn.createStatement();
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
             String sql = "INSERT INTO Sala (nm_sala, local_sala, capacidade_total)"
                     + "VALUES (?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -175,13 +165,13 @@ public class CadastroSala extends JFrame{
             preparedStatement.setString(2, local);
             preparedStatement.setInt(3, capacidade);
 
-
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
                 // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
             }
             stmt.close();
             conn.close();
+            banco.desconectar();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -189,5 +179,3 @@ public class CadastroSala extends JFrame{
         }
     }
 }
-
-

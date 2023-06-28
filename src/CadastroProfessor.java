@@ -13,11 +13,10 @@ public class CadastroProfessor extends JFrame {
     JTextField campoEmail;
     JTextField campoEndereco;
     JTextField campoCelular;
-    private String banco = "escola";
-    private String porta = "3306";
-    private String IpHost = "//localhost";
+    Connection conn = null;
+    Statement stmt = null;
 
-    public CadastroProfessor(){
+    public CadastroProfessor() {
         this.initialize();
     }
 
@@ -81,7 +80,8 @@ public class CadastroProfessor extends JFrame {
                 registrarProfessor();
             }
 
-            // funcionamento da função registrarProfessor: aqui os dados inseridos nos campos
+            // funcionamento da função registrarProfessor: aqui os dados inseridos nos
+            // campos
             // são associados às variáveis da classe aluno
             private void registrarProfessor() {
                 String nome = campoNome.getText();
@@ -91,23 +91,23 @@ public class CadastroProfessor extends JFrame {
                 String celular = campoCelular.getText();
 
                 // verifica se todos os campos estão preenchidos, um aviso é mostrado na tela
-                 // verifica se todos os campos estão preenchidos, caso não estejam ocorre um
+                // verifica se todos os campos estão preenchidos, caso não estejam ocorre um
                 // erro
                 String textoErro = "";
-                if(nome.isEmpty()){
+                if (nome.isEmpty()) {
                     textoErro += "Preencha o campo nome \n\n";
                 }
-                if(cpf.length() != 11){
+                if (cpf.length() != 11) {
                     textoErro += "Preencha o campo cpf corretamente \n";
                     textoErro += "Campo cpf deve conter 11 caractestes \n\n";
                 }
-                if(endereco.isEmpty()){
+                if (endereco.isEmpty()) {
                     textoErro += "Preencha o campo endereco \n\n";
                 }
-                if(email.isEmpty()){
+                if (email.isEmpty()) {
                     textoErro += "Preencha o campo email \n\n";
                 }
-                if(celular.isEmpty()){
+                if (celular.isEmpty()) {
                     textoErro += "Preencha o campo celular \n\n";
                 }
 
@@ -145,7 +145,7 @@ public class CadastroProfessor extends JFrame {
             }
 
         });
-            JButton botaoVoltar = new JButton("Voltar");
+        JButton botaoVoltar = new JButton("Voltar");
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -178,20 +178,16 @@ public class CadastroProfessor extends JFrame {
         pack();
     }
 
-
     private boolean adicionarProfessorNoBanco(String nome, String cpf, String email, String endereco, String celular) {
-        // Dados para conexão ao banco
-
-        final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
-        final String USERNAME = "root";
-        final String PASSWORD = "";
-
-        // Conexão do banco de dados
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
 
-            Statement stmt = conn.createStatement();
+            Banco banco = new Banco();
+
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
+
             String sql = "INSERT INTO professor (nm_professor, cpf_professor, em_professor, endereco_professor, cel_professor)"
                     + "VALUES (?,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -207,6 +203,7 @@ public class CadastroProfessor extends JFrame {
             }
             stmt.close();
             conn.close();
+            banco.desconectar();
             return true;
         } catch (Exception e) {
             e.printStackTrace();
