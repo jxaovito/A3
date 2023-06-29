@@ -101,8 +101,8 @@ public class Principal extends JFrame {
         botoesPanel.add(botaoCadastroAluno);
         botoesPanel.add(botaoCadastroProfessor);
         botoesPanel.add(botaoCadastroCurso);
-        botoesPanel.add(botaoCadastroTurma);
         botoesPanel.add(botaoCadastroSala);
+        botoesPanel.add(botaoCadastroTurma);
         botoesPanel.add(botaoLista);
         botoesPanel.add(botaoAssociarAlunoCurso);
         botoesPanel.add(botaoCancelar);

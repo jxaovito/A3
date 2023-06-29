@@ -158,7 +158,7 @@ public class CadastroSala extends JFrame implements InterfaceCadastros {
                 conn = banco.getConn();
                 stmt = banco.getStmt();
             }
-            String sql = "INSERT INTO Sala (nm_sala, local_sala, capacidade_total)"
+            String sql = "INSERT INTO sala (nm_sala, local_sala, capacidade_total)"
                     + "VALUES (?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);

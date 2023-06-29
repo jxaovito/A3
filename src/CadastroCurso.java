@@ -173,7 +173,7 @@ public class CadastroCurso extends JFrame implements InterfaceCadastros {
                 conn = banco.getConn();
                 stmt = banco.getStmt();
             }
-            String sql = "INSERT INTO Curso (nm_curso, carga_horaria, ds_curso, cd_funcionario)"
+            String sql = "INSERT INTO curso (nm_curso, carga_horaria, ds_curso, cd_funcionario)"
                     + "VALUES (?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);
