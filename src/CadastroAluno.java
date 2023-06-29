@@ -189,7 +189,7 @@ public class CadastroAluno extends JFrame implements InterfaceCadastros {
                 stmt = banco.getStmt();
             }
 
-            String sql = "SELECT MAX(matricula) as id FROM aluno";
+            String sql = "SELECT AUTO_INCREMENT as id FROM information_schema.tables WHERE table_name = 'aluno' AND table_schema = 'escola'";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
