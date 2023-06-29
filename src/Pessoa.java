@@ -14,7 +14,7 @@ public abstract class Pessoa {
         setCelularPessoa(celular);
     }
 
-    // Métodos
+    // Métodos getters e setters
     public String getNomePessoa() {
         return nome_pessoa;
     }

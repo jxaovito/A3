@@ -5,9 +5,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class Principal extends JFrame {
-    // fonte padrão do programa
-    // declaração das variaveis de texto
-
     public Principal() {
         this.initialize();
     }
@@ -111,7 +108,6 @@ public class Principal extends JFrame {
         botoesPanel.add(botaoCancelar);
 
         /*************** Inicia o frame ***************/
-        // add(formPanel, BorderLayout.NORTH);
         add(botoesPanel, BorderLayout.NORTH);
 
         // configurações básicas para iniciar a tela no tamanho certo

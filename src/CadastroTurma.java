@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroTurma extends JFrame {
+public class CadastroTurma extends JFrame{
 
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);

@@ -15,14 +15,13 @@ public class Banco {
 
         final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
         final String USERNAME = "root";
-        final String PASSWORD = "50ft4t1";
+        final String PASSWORD = "";
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
             this.stmt = conn.createStatement();
 
-            // this.stmt = conn.createStatement();
             return true;
         } catch (Exception e) {
             e.printStackTrace();

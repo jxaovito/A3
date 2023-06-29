@@ -3,6 +3,7 @@ public class Salas {
     private String local;
     private String capacidadeTotal;
 
+    // métodos getters e setters
     public String getNome() {
         return nome;
     }

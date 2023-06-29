@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-public class CadastroAluno extends JFrame {
+public class CadastroAluno extends JFrame implements InterfaceCadastros{
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
     // declaração das variaveis de texto
@@ -75,7 +75,7 @@ public class CadastroAluno extends JFrame {
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
-        // ações dos botões da tela de cadastro de aluno
+        // ações do botão da tela de cadastro de aluno
         botaoCadastrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +116,7 @@ public class CadastroAluno extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarAlunoNoBanco(nome, cpf, email, endereco, celular);
+                    Boolean deuCerto = adicionarNoBanco(nome, cpf, email, endereco, celular);
 
                     if (deuCerto) {
                         // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro professor
@@ -178,9 +178,7 @@ public class CadastroAluno extends JFrame {
         pack();
     }
 
-    // public Aluno aluno;
-
-    private boolean adicionarAlunoNoBanco(String nome, String cpf, String email, String endereco, String celular) {
+    private boolean adicionarNoBanco(String nome, String cpf, String email, String endereco, String celular) {
 
         try {
             Banco banco = new Banco();
@@ -218,7 +216,6 @@ public class CadastroAluno extends JFrame {
             while (resultSet.next()) {
                 qntd = resultSet.getInt("quantidade");
             }
-            System.out.println(qntd);
 
             Object[][] a = new Object[qntd][qntd];
 
@@ -235,10 +232,8 @@ public class CadastroAluno extends JFrame {
                 i++;
             }
 
-            System.out.println(Arrays.deepToString(a));
             if (camposAdicionados > 0) {
-                // mudar linha: falta matricula
-                // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
+             
             }
             stmt.close();
             conn.close();

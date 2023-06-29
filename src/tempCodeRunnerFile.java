@@ -1,1 +1,0 @@
-        CadastroAluno CadastroAluno = new CadastroAluno();

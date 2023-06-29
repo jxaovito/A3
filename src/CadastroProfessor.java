@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroProfessor extends JFrame {
+public class CadastroProfessor extends JFrame implements InterfaceCadastros{
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
     // declaração das variaveis de texto
@@ -91,8 +91,6 @@ public class CadastroProfessor extends JFrame {
                 String celular = campoCelular.getText();
 
                 // verifica se todos os campos estão preenchidos, um aviso é mostrado na tela
-                // verifica se todos os campos estão preenchidos, caso não estejam ocorre um
-                // erro
                 String textoErro = "";
                 if (nome.isEmpty()) {
                     textoErro += "Preencha o campo nome \n\n";
@@ -116,7 +114,7 @@ public class CadastroProfessor extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarProfessorNoBanco(nome, cpf, email, endereco, celular);
+                    Boolean deuCerto = adicionarNoBanco(nome, cpf, email, endereco, celular);
 
                     if (deuCerto) {
                         // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
@@ -178,7 +176,7 @@ public class CadastroProfessor extends JFrame {
         pack();
     }
 
-    private boolean adicionarProfessorNoBanco(String nome, String cpf, String email, String endereco, String celular) {
+    private boolean adicionarNoBanco(String nome, String cpf, String email, String endereco, String celular) {
         try {
 
             Banco banco = new Banco();
@@ -199,7 +197,6 @@ public class CadastroProfessor extends JFrame {
 
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
-                // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
             }
             stmt.close();
             conn.close();

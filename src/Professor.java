@@ -6,7 +6,7 @@ public class Professor extends Pessoa {
         super(nome, cpf, endereco, email, celular);
     }
 
-    // métodos
+    // métodos getters e setters
     public String getCodFuncionario() {
         return codFuncionario;
     }

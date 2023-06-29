@@ -48,7 +48,6 @@ public class CadastroAlunoCurso extends JFrame {
         });
 
         this.comboBoxAluno.addActionListener(e -> {
-            System.out.println(comboBoxAluno.getSelectedItem());
             this.indexAlunoSelecionado = (Integer) comboBoxAluno.getSelectedIndex();
         });
 
@@ -62,9 +61,9 @@ public class CadastroAlunoCurso extends JFrame {
         formPanel.add(labelAluno);
         formPanel.add(comboBoxAluno);
 
-        // criação do botão cadastrar
-        JButton botaoCadastrar = new JButton("Cadastrar");
-        // ações dos botões da tela de cadastro de aluno
+        // criação do botão de associação
+        JButton botaoCadastrar = new JButton("Associar");
+        // ações dos botões da tela de associação de aluno
         botaoCadastrar.addActionListener(e -> {
             Integer codigCurso = this.codigosCurso[indexCursoSelecionado];
             Integer codigoAluno = this.codigosAluno[indexAlunoSelecionado];
@@ -112,6 +111,7 @@ public class CadastroAlunoCurso extends JFrame {
 
         });
 
+        // criando o botão voltar
         JButton botaoVoltar = new JButton("Voltar");
         botaoVoltar.addActionListener(new ActionListener() {
             @Override
@@ -154,6 +154,8 @@ public class CadastroAlunoCurso extends JFrame {
                 conn = banco.getConn();
                 stmt = banco.getStmt();
             }
+            
+            // insere o aluno no curso pela matricula
             String sql = "INSERT INTO curso_aluno (cd_curso, matricula)"
                     + "VALUES (?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -162,8 +164,6 @@ public class CadastroAlunoCurso extends JFrame {
 
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
-                // mudar linha: falta matricula
-                // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
             }
             stmt.close();
             conn.close();

@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroSala extends JFrame {
+public class CadastroSala extends JFrame implements InterfaceCadastros{
 
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
@@ -87,7 +87,7 @@ public class CadastroSala extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarSalaNoBanco(nome, local, capacidade);
+                    Boolean deuCerto = adicionarNoBanco(nome, local, capacidade);
 
                     if (deuCerto) {
                         // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
@@ -150,7 +150,7 @@ public class CadastroSala extends JFrame {
         pack();
     }
 
-    private boolean adicionarSalaNoBanco(String nome, String local, Integer capacidade) {
+    private boolean adicionarNoBanco(String nome, String local, Integer capacidade) {
         try {
             Banco banco = new Banco();
 

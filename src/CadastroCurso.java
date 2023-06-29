@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroCurso extends JFrame {
+public class CadastroCurso extends JFrame implements InterfaceCadastros{
 
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
@@ -70,7 +70,7 @@ public class CadastroCurso extends JFrame {
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
-        // ações dos botões da tela de cadastro de aluno
+        // ações do botão
         botaoCadastrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,7 +101,7 @@ public class CadastroCurso extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarCursoNoBanco(nome, cargaHoraria, descricao);
+                    Boolean deuCerto = adicionarNoBanco(nome, cargaHoraria, descricao);
 
                     if (deuCerto) {
                         // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
@@ -164,7 +164,7 @@ public class CadastroCurso extends JFrame {
         pack();
     }
 
-    private boolean adicionarCursoNoBanco(String nome, int cargaHoraria, String descricao) {
+    private boolean adicionarNoBanco(String nome, int cargaHoraria, String descricao) {
 
         try {
             Banco banco = new Banco();
@@ -183,8 +183,6 @@ public class CadastroCurso extends JFrame {
 
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
-                // mudar linha: falta matricula
-                // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
             }
             stmt.close();
             conn.close();
