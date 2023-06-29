@@ -15,7 +15,7 @@ public class Banco {
 
         final String DB_URL = "jdbc:mysql:" + this.IpHost + ":" + this.porta + "/" + this.banco;
         final String USERNAME = "root";
-        final String PASSWORD = "";
+        final String PASSWORD = "50ft4t1";
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
