@@ -15,6 +15,8 @@
 Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
 [JDK](https://www.oracle.com/br/java/technologies/downloads/), [xampp](https://www.apachefriends.org/pt_br/download.html). 
 
+Importar arquivo estrutura_projeto_escola para dentro do seu banco de dados
+
 Configurar dados de acesso ao banco no arquivo banco.java
 
 Obs: No Visual Studio Code, será necessário baixar também a extensão "Extension Pack For Java"
