@@ -1,9 +1,18 @@
 public class Salas {
+	private String codSala;
     private String nome;
     private String local;
     private String capacidadeTotal;
 
     // métodos getters e setters
+    public String getCodSala() {
+        return codSala;
+    }
+
+    public void setCodSala(String codSala) {
+        this.codSala = codSala;
+    }
+    
     public String getNome() {
         return nome;
     }
