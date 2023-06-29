@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import javax.swing.*;
 
-public class CadastroAluno extends JFrame implements InterfaceCadastros{
+public class CadastroAluno extends JFrame implements InterfaceCadastros {
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
     // declaração das variaveis de texto
@@ -120,7 +120,7 @@ public class CadastroAluno extends JFrame implements InterfaceCadastros{
 
                     if (deuCerto) {
                         // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro professor
-                        JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
+                        JOptionPane.showMessageDialog(null, "Operação efetuada com sucesso!!", "Sucesso",
                                 JOptionPane.PLAIN_MESSAGE);
                     } else {
                         // se não, ocorre um erro na tela
@@ -233,7 +233,7 @@ public class CadastroAluno extends JFrame implements InterfaceCadastros{
             }
 
             if (camposAdicionados > 0) {
-             
+
             }
             stmt.close();
             conn.close();

@@ -99,7 +99,7 @@ public class CadastroTurma extends JFrame {
 
                 if (deuCerto) {
                     // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
-                    JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
+                    JOptionPane.showMessageDialog(null, "Operação efetuada com sucesso!!", "Sucesso",
                             JOptionPane.PLAIN_MESSAGE);
                 } else {
                     // se não, ocorre um erro na tela
@@ -174,12 +174,13 @@ public class CadastroTurma extends JFrame {
             String sql = "SELECT sala.capacidade_total, COUNT(curso_aluno.matricula) AS quantidade FROM turma LEFT JOIN sala ON sala.cd_sala = turma.cd_sala LEFT JOIN curso_aluno ON curso_aluno.cd_curso = turma.cd_curso WHERE turma.cd_sala = ? AND turma.cd_curso = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, cdSala);
+            preparedStatement.setInt(2, cdCurso);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             Integer capacidadeSala = 0;
             Integer qntdAlunos = 0;
             while (resultSet.next()) {
-                capacidadeSala = resultSet.getInt("capaciadade_total");
+                capacidadeSala = resultSet.getInt("capacidade_total");
                 qntdAlunos = resultSet.getInt("quantidade");
             }
 
@@ -189,9 +190,10 @@ public class CadastroTurma extends JFrame {
             }
 
             // Validação para verificar se curso já foi atribuido a aquele dia da semana
-            sql = "SELECT cd_curso from turma WHERE cd_dia = ?";
+            sql = "SELECT cd_curso from turma WHERE cd_dia = ? AND cd_curso = ?";
             preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, cdDiaSemana);
+            preparedStatement.setInt(2, cdCurso);
             resultSet = preparedStatement.executeQuery();
             resultSet.last();
             if (resultSet.getRow() > 0) {
@@ -200,9 +202,10 @@ public class CadastroTurma extends JFrame {
             }
 
             // Validação para verificar se sala já foi atribuido a aquele dia da semana
-            sql = "SELECT cd_sala from turma WHERE cd_dia = ?";
+            sql = "SELECT cd_sala from turma WHERE cd_dia = ? AND cd_sala = ?";
             preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, cdDiaSemana);
+            preparedStatement.setInt(2, cdSala);
             resultSet = preparedStatement.executeQuery();
             resultSet.last();
             if (resultSet.getRow() > 0) {
@@ -216,7 +219,7 @@ public class CadastroTurma extends JFrame {
             preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, cdCurso);
             preparedStatement.setInt(2, cdSala);
-            preparedStatement.setInt(2, cdDiaSemana);
+            preparedStatement.setInt(3, cdDiaSemana);
 
             preparedStatement.executeUpdate();
 

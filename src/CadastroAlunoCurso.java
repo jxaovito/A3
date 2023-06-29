@@ -84,7 +84,7 @@ public class CadastroAlunoCurso extends JFrame {
 
                 if (deuCerto) {
                     // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
-                    JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
+                    JOptionPane.showMessageDialog(null, "Operação efetuada com sucesso!!", "Sucesso",
                             JOptionPane.PLAIN_MESSAGE);
                 } else {
                     // se não, ocorre um erro na tela
