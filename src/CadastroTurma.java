@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
 
-public class CadastroTurma extends JFrame{
+public class CadastroTurma extends JFrame {
 
     // fonte padrão do programa
     final private Font fontePadrao = new Font("Arial", Font.BOLD, 18);
@@ -26,6 +26,10 @@ public class CadastroTurma extends JFrame{
     int[] codigosSala;
     int indexSalaSelecionado;
 
+    JComboBox<String> comboBoxDiasSemana;
+    int[] codigosDiasSemana = { 1, 2, 3, 4, 5 };
+    int indexDiaSemanaSelecionado;
+
     public CadastroTurma() {
         this.initialize();
     }
@@ -43,13 +47,20 @@ public class CadastroTurma extends JFrame{
         labelSala.setFont(fontePadrao);
         this.criarComboBoxSala();
 
+        JLabel labelDiaSemana = new JLabel("Dia da Semana:");
+        labelDiaSemana.setFont(fontePadrao);
+        this.criarComboBoxDiasSemana();
+
         this.comboBoxCurso.addActionListener(e -> {
             this.indexCursoSelecionado = (Integer) comboBoxCurso.getSelectedIndex();
         });
 
         this.comboBoxSala.addActionListener(e -> {
-            System.out.println(comboBoxSala.getSelectedItem());
             this.indexSalaSelecionado = (Integer) comboBoxSala.getSelectedIndex();
+        });
+
+        this.comboBoxDiasSemana.addActionListener(e -> {
+            this.indexDiaSemanaSelecionado = (Integer) comboBoxDiasSemana.getSelectedIndex();
         });
 
         // container que contem os campos de texto e seus respectivos nomes
@@ -61,6 +72,8 @@ public class CadastroTurma extends JFrame{
         formPanel.add(comboBoxCurso);
         formPanel.add(labelSala);
         formPanel.add(comboBoxSala);
+        formPanel.add(labelDiaSemana);
+        formPanel.add(comboBoxDiasSemana);
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
@@ -68,6 +81,7 @@ public class CadastroTurma extends JFrame{
         botaoCadastrar.addActionListener(e -> {
             Integer codigCurso = this.codigosCurso[indexCursoSelecionado];
             Integer codigoSala = this.codigosSala[indexSalaSelecionado];
+            Integer codigoDiaSemana = this.codigosDiasSemana[indexDiaSemanaSelecionado];
 
             if (codigCurso == 0) {
                 this.textoErro += "Selecione um curso \n";
@@ -81,7 +95,7 @@ public class CadastroTurma extends JFrame{
                 JOptionPane.showMessageDialog(null, textoErro, "Erro",
                         JOptionPane.ERROR_MESSAGE);
             } else {
-                Boolean deuCerto = associarTurma(codigCurso, codigoSala);
+                Boolean deuCerto = associarTurma(codigCurso, codigoSala, codigoDiaSemana);
 
                 if (deuCerto) {
                     // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
@@ -135,7 +149,7 @@ public class CadastroTurma extends JFrame{
         add(botoesPanel, BorderLayout.SOUTH);
 
         // configurações básicas para iniciar a tela no tamanho certo
-        setTitle("Cadastro de Curso");
+        setTitle("Cadastro de turma");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(400, 500);
         setMinimumSize(new Dimension(500, 450));
@@ -145,7 +159,7 @@ public class CadastroTurma extends JFrame{
         pack();
     }
 
-    private boolean associarTurma(int cdCurso, int cdSala) {
+    private boolean associarTurma(int cdCurso, int cdSala, int cdDiaSemana) {
 
         try {
             Banco banco = new Banco();
@@ -154,17 +168,58 @@ public class CadastroTurma extends JFrame{
                 conn = banco.getConn();
                 stmt = banco.getStmt();
             }
-            String sql = "INSERT INTO turma (cd_curso, cd_sala)"
-                    + "VALUES (?,?)";
+
+            // validações
+            // Validação para verificar se sala comporta quantidade de alunos
+            String sql = "SELECT sala.capacidade_total, COUNT(curso_aluno.matricula) AS quantidade FROM turma LEFT JOIN sala ON sala.cd_sala = turma.cd_sala LEFT JOIN curso_aluno ON curso_aluno.cd_curso = turma.cd_curso WHERE turma.cd_sala = ? AND turma.cd_curso = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, cdSala);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Integer capacidadeSala = 0;
+            Integer qntdAlunos = 0;
+            while (resultSet.next()) {
+                capacidadeSala = resultSet.getInt("capaciadade_total");
+                qntdAlunos = resultSet.getInt("quantidade");
+            }
+
+            if (capacidadeSala < qntdAlunos) {
+                this.textoErro += "Capacidade da sala não comporta quantidade de alunos \n";
+                return false;
+            }
+
+            // Validação para verificar se curso já foi atribuido a aquele dia da semana
+            sql = "SELECT cd_curso from turma WHERE cd_dia = ?";
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, cdDiaSemana);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.last();
+            if (resultSet.getRow() > 0) {
+                this.textoErro += "Esse curso já foi associado a esse dia da semana \n";
+                return false;
+            }
+
+            // Validação para verificar se sala já foi atribuido a aquele dia da semana
+            sql = "SELECT cd_sala from turma WHERE cd_dia = ?";
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, cdDiaSemana);
+            resultSet = preparedStatement.executeQuery();
+            resultSet.last();
+            if (resultSet.getRow() > 0) {
+                this.textoErro += "Esta sala já foi associada a este dia da semana \n";
+                return false;
+            }
+
+            // Inserir no banco
+            sql = "INSERT INTO turma (cd_curso, cd_sala, cd_dia)"
+                    + "VALUES (?,?,?)";
+            preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, cdCurso);
             preparedStatement.setInt(2, cdSala);
+            preparedStatement.setInt(2, cdDiaSemana);
 
-            int camposAdicionados = preparedStatement.executeUpdate();
-            if (camposAdicionados > 0) {
-                // mudar linha: falta matricula
-                // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
-            }
+            preparedStatement.executeUpdate();
+
             stmt.close();
             conn.close();
             banco.desconectar();
@@ -253,6 +308,40 @@ public class CadastroTurma extends JFrame{
             }
 
             this.comboBoxSala.setModel(comboBoxModel);
+
+            stmt.close();
+            conn.close();
+            banco.desconectar();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean criarComboBoxDiasSemana() {
+
+        try {
+            Banco banco = new Banco();
+
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
+
+            this.comboBoxDiasSemana = new JComboBox<>();
+
+            // Consulta ao banco de dados para obter os nomes dos cursos
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT ds_dia FROM dias_semana");
+
+            // Populando o JComboBox com os nomes dos cursos
+            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+            while (resultSet.next()) {
+                comboBoxModel.addElement(resultSet.getString("ds_dia"));
+            }
+
+            this.comboBoxDiasSemana.setModel(comboBoxModel);
 
             stmt.close();
             conn.close();

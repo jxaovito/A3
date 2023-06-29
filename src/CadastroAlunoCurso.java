@@ -135,7 +135,7 @@ public class CadastroAlunoCurso extends JFrame {
         add(botoesPanel, BorderLayout.SOUTH);
 
         // configurações básicas para iniciar a tela no tamanho certo
-        setTitle("Cadastro de Curso");
+        setTitle("Associar aluno ao curso");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(400, 500);
         setMinimumSize(new Dimension(500, 450));
@@ -154,7 +154,7 @@ public class CadastroAlunoCurso extends JFrame {
                 conn = banco.getConn();
                 stmt = banco.getStmt();
             }
-            
+
             // insere o aluno no curso pela matricula
             String sql = "INSERT INTO curso_aluno (cd_curso, matricula)"
                     + "VALUES (?,?)";
