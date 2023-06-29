@@ -191,10 +191,19 @@ public class CadastroAluno extends JFrame {
                 stmt = banco.getStmt();
             }
 
-            String sql = "INSERT INTO aluno (nm_aluno, cpf_aluno, em_aluno, endereco_aluno, cel_aluno)"
-                    + "VALUES (?,?,?,?,?)";
+            String sql = "SELECT MAX(matricula) as id FROM aluno";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            preparedStatement.setString(1, nome);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            Integer codigo = 0;
+            if (resultSet.next()) {
+                codigo = resultSet.getInt("id") + 1;
+            }
+
+            sql = "INSERT INTO aluno (nm_aluno, cpf_aluno, em_aluno, endereco_aluno, cel_aluno)"
+                    + "VALUES (?,?,?,?,?)";
+            preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, nome + " - " + codigo);
             preparedStatement.setString(2, cpf);
             preparedStatement.setString(3, email);
             preparedStatement.setString(4, endereco);
@@ -204,7 +213,7 @@ public class CadastroAluno extends JFrame {
 
             sql = "SELECT count(cd_curso) as quantidade from curso";
             preparedStatement = conn.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
                 qntd = resultSet.getInt("quantidade");
@@ -213,6 +222,8 @@ public class CadastroAluno extends JFrame {
 
             Object[][] a = new Object[qntd][qntd];
 
+            int i = 0;
+
             sql = "SELECT cd_curso, nm_curso from curso";
             preparedStatement = conn.prepareStatement(sql);
 
@@ -220,10 +231,8 @@ public class CadastroAluno extends JFrame {
             while (resultSet.next()) {
                 int cd_curso = resultSet.getInt("cd_curso");
                 String nm_curso = resultSet.getString("nm_curso");
-                for (int i = 0; i < qntd; i++) {
-                    a[i] = new Object[] { cd_curso, nm_curso };
-                    continue;
-                }
+                a[i] = new Object[] { cd_curso, nm_curso };
+                i++;
             }
 
             System.out.println(Arrays.deepToString(a));

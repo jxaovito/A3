@@ -14,6 +14,10 @@ public class CadastroCurso extends JFrame {
     JTextField campoDescricao;
     Connection conn = null;
     Statement stmt = null;
+    JComboBox<String> comboBox;
+    int i = 0;
+    int[] codigosProfessores;
+    int indexProfessorSelecionado;
 
     public CadastroCurso() {
         this.initialize();
@@ -42,6 +46,14 @@ public class CadastroCurso extends JFrame {
         campoDescricao = new JTextField();
         campoDescricao.setFont(fontePadrao);
 
+        JLabel labelProfessor = new JLabel("Professor:");
+        labelProfessor.setFont(fontePadrao);
+        this.criarComboBoxProfessor();
+
+        this.comboBox.addActionListener(e -> {
+            this.indexProfessorSelecionado = (Integer) comboBox.getSelectedIndex();
+        });
+
         // container que contem os campos de texto e seus respectivos nomes
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(0, 1, 10, 10));
@@ -53,6 +65,8 @@ public class CadastroCurso extends JFrame {
         formPanel.add(campoCargaHoraria);
         formPanel.add(labelDescricao);
         formPanel.add(campoDescricao);
+        formPanel.add(labelProfessor);
+        formPanel.add(this.comboBox);
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
@@ -159,18 +173,64 @@ public class CadastroCurso extends JFrame {
                 conn = banco.getConn();
                 stmt = banco.getStmt();
             }
-            String sql = "INSERT INTO Curso (nm_curso, carga_horaria, ds_curso)"
-                    + "VALUES (?,?,?)";
+            String sql = "INSERT INTO Curso (nm_curso, carga_horaria, ds_curso, cd_funcionario)"
+                    + "VALUES (?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nome);
             preparedStatement.setInt(2, cargaHoraria);
             preparedStatement.setString(3, descricao);
+            preparedStatement.setInt(4, this.codigosProfessores[this.indexProfessorSelecionado]);
 
             int camposAdicionados = preparedStatement.executeUpdate();
             if (camposAdicionados > 0) {
                 // mudar linha: falta matricula
                 // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
             }
+            stmt.close();
+            conn.close();
+            banco.desconectar();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean criarComboBoxProfessor() {
+
+        try {
+            Banco banco = new Banco();
+
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
+
+            this.comboBox = new JComboBox<>();
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT count(cd_funcionario) as quantidade FROM professor");
+
+            while (resultSet.next()) {
+                Integer quantidade = resultSet.getInt("quantidade");
+                this.codigosProfessores = new int[quantidade];
+            }
+
+            // Consulta ao banco de dados para obter os nomes dos cursos
+            statement = conn.createStatement();
+            resultSet = statement.executeQuery("SELECT nm_professor, cd_funcionario FROM professor");
+
+            // Populando o JComboBox com os nomes dos cursos
+            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+            while (resultSet.next()) {
+                String nomeProfessor = resultSet.getString("nm_professor");
+                this.codigosProfessores[i] = resultSet.getInt("cd_funcionario");
+                comboBoxModel.addElement(nomeProfessor);
+                i++;
+            }
+
+            this.comboBox.setModel(comboBoxModel);
+
             stmt.close();
             conn.close();
             banco.desconectar();

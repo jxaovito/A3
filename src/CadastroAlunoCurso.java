@@ -3,7 +3,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.*;
-import java.util.Arrays;
 
 public class CadastroAlunoCurso extends JFrame {
 
@@ -15,6 +14,17 @@ public class CadastroAlunoCurso extends JFrame {
     JTextField campoDescricao;
     Connection conn = null;
     Statement stmt = null;
+    int iCurso = 0;
+    int iAluno = 0;
+    String textoErro = "";
+
+    JComboBox<String> comboBoxCurso;
+    int[] codigosCurso;
+    int indexCursoSelecionado;
+
+    JComboBox<String> comboBoxAluno;
+    int[] codigosAluno;
+    int indexAlunoSelecionado;
 
     public CadastroAlunoCurso() {
         this.initialize();
@@ -22,83 +32,67 @@ public class CadastroAlunoCurso extends JFrame {
 
     public void initialize() {
         // inicializando todos os campos e seus nomes
-        JLabel labelCadastroAlunoCurso = new JLabel("Associar Aluno ao curso", SwingConstants.CENTER);
+        JLabel labelCadastroAlunoCurso = new JLabel("Associar aluno ao curso", SwingConstants.CENTER);
         labelCadastroAlunoCurso.setFont(fontePadrao);
 
-        JLabel labelNome = new JLabel("Nome:");
-        labelNome.setFont(fontePadrao);
+        JLabel labelCurso = new JLabel("Curso");
+        labelCurso.setFont(fontePadrao);
+        this.criarComboBoxCurso();
 
-        campoNome = new JTextField();
-        campoNome.setFont(fontePadrao);
+        JLabel labelAluno = new JLabel("Aluno:");
+        labelAluno.setFont(fontePadrao);
+        this.criarComboBoxAluno();
 
-        JLabel labelCargaHoraria = new JLabel("Carga Horária:");
-        labelCargaHoraria.setFont(fontePadrao);
+        this.comboBoxCurso.addActionListener(e -> {
+            this.indexCursoSelecionado = (Integer) comboBoxCurso.getSelectedIndex();
+        });
 
-        campoCargaHoraria = new JTextField();
-        campoCargaHoraria.setFont(fontePadrao);
-
-        JLabel labelDescricao = new JLabel("Descrição:");
-        labelDescricao.setFont(fontePadrao);
-
-        campoDescricao = new JTextField();
-        campoDescricao.setFont(fontePadrao);
+        this.comboBoxAluno.addActionListener(e -> {
+            System.out.println(comboBoxAluno.getSelectedItem());
+            this.indexAlunoSelecionado = (Integer) comboBoxAluno.getSelectedIndex();
+        });
 
         // container que contem os campos de texto e seus respectivos nomes
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(0, 1, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         formPanel.add(labelCadastroAlunoCurso);
-        formPanel.add(labelNome);
-        formPanel.add(campoNome);
-        formPanel.add(labelCargaHoraria);
-        formPanel.add(campoCargaHoraria);
-        formPanel.add(labelDescricao);
-        formPanel.add(campoDescricao);
+        formPanel.add(labelCurso);
+        formPanel.add(comboBoxCurso);
+        formPanel.add(labelAluno);
+        formPanel.add(comboBoxAluno);
 
         // criação do botão cadastrar
         JButton botaoCadastrar = new JButton("Cadastrar");
         // ações dos botões da tela de cadastro de aluno
-        botaoCadastrar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                registrarCurso();
+        botaoCadastrar.addActionListener(e -> {
+            Integer codigCurso = this.codigosCurso[indexCursoSelecionado];
+            Integer codigoAluno = this.codigosAluno[indexAlunoSelecionado];
+
+            if (codigCurso == 0) {
+                this.textoErro += "Selecione um curso \n";
             }
 
-            // funcionamento da função registrarCurso: aqui os dados inseridos nos campos
-            // são associados às variáveis da classe aluno
-            private void registrarCurso() {
-                String nome = campoNome.getText();
-                int cargaHoraria = Integer.parseInt(campoCargaHoraria.getText());
-                String descricao = campoDescricao.getText();
+            if (codigoAluno == 0) {
+                this.textoErro += "Selecione um aluno \n";
+            }
 
-                // verifica se todos os campos estão preenchidos, um aviso é mostrado na tela
-                String textoErro = "";
-                if (nome.isEmpty()) {
-                    textoErro += "Preencha o campo nome \n\n";
-                }
-                if (cargaHoraria == 0) {
-                    textoErro += "Preencha o campo carga horária \n";
-                }
-                if (descricao.isEmpty()) {
-                    textoErro += "Preencha o campo descrição \n\n";
-                }
+            if (this.textoErro != "") {
+                JOptionPane.showMessageDialog(null, textoErro, "Erro",
+                        JOptionPane.ERROR_MESSAGE);
+            } else {
+                Boolean deuCerto = associarAlunoCurso(codigCurso, codigoAluno);
 
-                if (textoErro != "") {
-                    JOptionPane.showMessageDialog(null, textoErro, "Erro",
-                            JOptionPane.ERROR_MESSAGE);
+                if (deuCerto) {
+                    // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
+                    JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
+                            JOptionPane.PLAIN_MESSAGE);
                 } else {
-                    // se estiverem preenchidos, aluno é adicionado ao banco de dados
-                    Boolean deuCerto = adicionarCursoNoBanco(nome, cargaHoraria, descricao);
+                    // se não, ocorre um erro na tela
+                    JOptionPane.showMessageDialog(null, this.textoErro, "Erro",
+                            JOptionPane.ERROR_MESSAGE);
 
-                    if (deuCerto) {
-                        // se der tudo certo, um aviso é dado e o usuário pode cadastrar outro aluno
-                        JOptionPane.showMessageDialog(null, "Deu boa!!", "Boa",
-                                JOptionPane.PLAIN_MESSAGE);
-                    } else {
-                        // se não, ocorre um erro na tela
-                        JOptionPane.showMessageDialog(null, "Falha ao cadastrar Curso", "Erro",
-                                JOptionPane.ERROR_MESSAGE);
-                    }
+                    this.textoErro = "";
                 }
             }
 
@@ -151,39 +145,115 @@ public class CadastroAlunoCurso extends JFrame {
         pack();
     }
 
-    private boolean adicionarCursoNoBanco(String nome, int cargaHoraria, String descricao) {
+    private boolean associarAlunoCurso(int cdCurso, int cdAluno) {
 
         try {
             Banco banco = new Banco();
-            int qntd = 0;
 
             if (banco.ConectarBanco()) {
                 conn = banco.getConn();
                 stmt = banco.getStmt();
             }
-            String sql = "SELECT count(cd_curso) as quantidade from curso";
+            String sql = "INSERT INTO curso_aluno (cd_curso, matricula)"
+                    + "VALUES (?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            preparedStatement.setInt(1, cdCurso);
+            preparedStatement.setInt(2, cdAluno);
+
+            int camposAdicionados = preparedStatement.executeUpdate();
+            if (camposAdicionados > 0) {
+                // mudar linha: falta matricula
+                // aluno = new Aluno(nome, cpf, email, endereco, celular, matricula);
+            }
+            stmt.close();
+            conn.close();
+            banco.desconectar();
+            return true;
+        } catch (Exception e) {
+            this.textoErro = e.getMessage();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean criarComboBoxCurso() {
+
+        try {
+            Banco banco = new Banco();
+
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
+
+            this.comboBoxCurso = new JComboBox<>();
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT count(cd_curso) as quantidade FROM curso");
 
             while (resultSet.next()) {
-                qntd = resultSet.getInt("quantidade");
+                Integer quantidade = resultSet.getInt("quantidade");
+                this.codigosCurso = new int[quantidade];
             }
-            System.out.println(qntd);
 
-            Object[][] a = new Object[qntd][qntd];
+            // Consulta ao banco de dados para obter os nomes dos cursos
+            statement = conn.createStatement();
+            resultSet = statement.executeQuery("SELECT nm_curso, cd_curso FROM curso");
 
-            sql = "SELECT cd_curso, nm_curso from curso";
-            preparedStatement = conn.prepareStatement(sql);
-
-            resultSet = preparedStatement.executeQuery();
+            // Populando o JComboBox com os nomes dos cursos
+            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
             while (resultSet.next()) {
-                for (int i = 0; i < qntd; i++) {
-                    a[i] = new Object[] { resultSet.getInt("cd_curso"),
-                            resultSet.getString("nm_curso") };
-                }
+                comboBoxModel.addElement(resultSet.getString("nm_curso"));
+                this.codigosCurso[iCurso] = resultSet.getInt("cd_curso");
+                iCurso++;
             }
 
-            System.out.println(Arrays.deepToString(a));
+            this.comboBoxCurso.setModel(comboBoxModel);
+
+            stmt.close();
+            conn.close();
+            banco.desconectar();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean criarComboBoxAluno() {
+
+        try {
+            Banco banco = new Banco();
+
+            if (banco.ConectarBanco()) {
+                conn = banco.getConn();
+                stmt = banco.getStmt();
+            }
+
+            this.comboBoxAluno = new JComboBox<>();
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT count(matricula) as quantidade FROM aluno");
+
+            while (resultSet.next()) {
+                Integer quantidade = resultSet.getInt("quantidade");
+                this.codigosAluno = new int[quantidade];
+            }
+
+            // Consulta ao banco de dados para obter os nomes dos cursos
+            statement = conn.createStatement();
+            resultSet = statement.executeQuery("SELECT nm_aluno, matricula FROM aluno");
+
+            // Populando o JComboBox com os nomes dos cursos
+            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+            while (resultSet.next()) {
+                comboBoxModel.addElement(resultSet.getString("nm_aluno"));
+                this.codigosAluno[iAluno] = resultSet.getInt("matricula");
+                iAluno++;
+            }
+
+            this.comboBoxAluno.setModel(comboBoxModel);
+
             stmt.close();
             conn.close();
             banco.desconectar();

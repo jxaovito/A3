@@ -1,5 +1,5 @@
 
-  import java.awt.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -8,7 +8,7 @@ public class Principal extends JFrame {
     // fonte padrão do programa
     // declaração das variaveis de texto
 
-    public Principal(){
+    public Principal() {
         this.initialize();
     }
 
@@ -33,7 +33,7 @@ public class Principal extends JFrame {
             }
 
         });
-          JButton botaoCadastroCurso = new JButton("Cadastrar Curso");
+        JButton botaoCadastroCurso = new JButton("Cadastrar Curso");
         botaoCadastroCurso.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,7 +42,7 @@ public class Principal extends JFrame {
             }
 
         });
-         JButton botaoCadastroTurma = new JButton("Cadastrar Turma");
+        JButton botaoCadastroTurma = new JButton("Cadastrar Turma");
         botaoCadastroTurma.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,7 +51,7 @@ public class Principal extends JFrame {
             }
 
         });
-         JButton botaoCadastroSala = new JButton("Cadastrar Sala");
+        JButton botaoCadastroSala = new JButton("Cadastrar Sala");
         botaoCadastroSala.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -61,7 +61,29 @@ public class Principal extends JFrame {
 
         });
 
-         // criação e funcionamento do botão de fechar
+        JButton botaoLista = new JButton("Abrir lista de cursos");
+        botaoLista.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new Lista();
+
+            }
+
+        });
+
+        JButton botaoAssociarAlunoCurso = new JButton("Associar aluno ao curso");
+        botaoAssociarAlunoCurso.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new CadastroAlunoCurso();
+
+            }
+
+        });
+
+        // criação e funcionamento do botão de fechar
         JButton botaoCancelar = new JButton("Fechar");
         botaoCancelar.addActionListener(new ActionListener() {
             @Override
@@ -84,10 +106,12 @@ public class Principal extends JFrame {
         botoesPanel.add(botaoCadastroCurso);
         botoesPanel.add(botaoCadastroTurma);
         botoesPanel.add(botaoCadastroSala);
+        botoesPanel.add(botaoLista);
+        botoesPanel.add(botaoAssociarAlunoCurso);
         botoesPanel.add(botaoCancelar);
 
         /*************** Inicia o frame ***************/
-        //add(formPanel, BorderLayout.NORTH);
+        // add(formPanel, BorderLayout.NORTH);
         add(botoesPanel, BorderLayout.NORTH);
 
         // configurações básicas para iniciar a tela no tamanho certo
@@ -102,4 +126,3 @@ public class Principal extends JFrame {
     }
 
 }
-
